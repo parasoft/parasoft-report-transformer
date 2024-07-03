@@ -10,7 +10,27 @@
     <!-- For cppTest professional report, "prjModule" attribute is not present. -->
     <xsl:variable name="isCPPProReport" select="not(/ResultsSession/@prjModule) and /ResultsSession/@toolName = 'C++test'"/>
     <xsl:param name="pipelineBuildWorkingDirectory"><xsl:value-of select="/ResultsSession/@pipelineBuildWorkingDirectory"/></xsl:param>
-    
+    <xsl:variable name="originalUriBaseIds">
+        <xsl:variable name="projectDirectoryArray" select="tokenize($pipelineBuildWorkingDirectory, ',')"/>
+        <xsl:for-each select="$projectDirectoryArray">
+            <xsl:element name="PROJECTROOT">
+                <xsl:attribute name="name">PROJECTROOT-<xsl:value-of select="position()"/></xsl:attribute>
+                <xsl:attribute name="uri"><xsl:value-of select="."/></xsl:attribute>
+            </xsl:element>
+        </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="uriPrefix">
+        <xsl:variable name="firstLocUri" select="/ResultsSession/Scope/Locations/Loc[1]/@uri"/>
+        <xsl:choose>
+            <xsl:when test="matches($firstLocUri, '^file:/[^/]')">file:/</xsl:when>
+            <xsl:when test="matches($firstLocUri, '^file://[^/]+/')">
+                <xsl:variable name="hostname" select="replace($firstLocUri, '^file://([^/]+)(/.*)$', '$1')" />
+                <xsl:value-of select="concat('file://', $hostname, '/')" />
+            </xsl:when>
+            <xsl:when test="matches($firstLocUri, '^file:///')">file:///</xsl:when>
+        </xsl:choose>
+    </xsl:variable>
+
     <xsl:variable name="qt">"</xsl:variable>
     <xsl:variable name="illegalChars" select="'\/&quot;&#xD;&#xA;&#x9;'"/>
     <xsl:variable name="illegalCharReplacements" select="'\/&quot;rnt'"/>
@@ -93,6 +113,11 @@
             <xsl:call-template name="rules_list"/>
         <xsl:text>] } }</xsl:text>
         <xsl:call-template name="version_control_provenance"/>
+        <xsl:if test="$originalUriBaseIds/PROJECTROOT">
+            <xsl:text>, "originalUriBaseIds": {</xsl:text>
+                <xsl:call-template name="original_uri_base_ids"/>
+            <xsl:text>}</xsl:text>
+        </xsl:if>
         <xsl:text>, "results": [</xsl:text>
             <!-- static violations list -->
             <xsl:call-template name="results"/>
@@ -199,7 +224,19 @@
             <xsl:text>]</xsl:text>
         </xsl:if>
     </xsl:template>
-    
+
+    <xsl:template name="original_uri_base_ids">
+        <xsl:for-each select="$originalUriBaseIds/PROJECTROOT">
+            <xsl:if test="position() != 1">,</xsl:if>
+            <xsl:text>"</xsl:text>
+            <xsl:value-of select="@name"/>
+            <xsl:text>": { "uri": "</xsl:text>
+            <xsl:value-of select="$uriPrefix"/>
+            <xsl:value-of select="@uri"/>
+            <xsl:text>" }</xsl:text>
+        </xsl:for-each>
+    </xsl:template>
+
     <xsl:template name="results">
         <xsl:for-each select="/ResultsSession/CodingStandards/StdViols/*[string-length(@supp)=0 or @supp!='true' or $skip_suppressed!='true']">
             <xsl:if test="position() != 1">
