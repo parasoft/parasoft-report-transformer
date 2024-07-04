@@ -28,14 +28,20 @@
     <xsl:variable name="originalUriBaseIds">
         <xsl:variable name="projectRootPathArray" select="tokenize($projectRootPaths, ',')"/>
         <xsl:for-each select="$projectRootPathArray">
+            <xsl:variable name="contactedUri">
+                <xsl:value-of select="$uriPrefix"/>
+                <xsl:value-of select="."/>
+            </xsl:variable>
+            <xsl:variable name="processedUri" select="translate($contactedUri, '\', '/')"/>
             <xsl:element name="PROJECTROOT">
                 <xsl:attribute name="name">PROJECTROOT-<xsl:value-of select="position()"/></xsl:attribute>
                 <xsl:attribute name="uri">
-                    <xsl:variable name="contactedUri">
-                        <xsl:value-of select="$uriPrefix"/>
-                        <xsl:value-of select="."/>
-                    </xsl:variable>
-                    <xsl:value-of select="translate($contactedUri, '\', '/')"/>
+                    <xsl:value-of select="$processedUri"/>
+                </xsl:attribute>
+                <xsl:attribute name="encodedUri">
+                    <xsl:call-template name="getEncodedProjectRootPath">
+                        <xsl:with-param name="originalProjectRootPath" select="$processedUri"/>
+                    </xsl:call-template>
                 </xsl:attribute>
             </xsl:element>
         </xsl:for-each>
@@ -552,10 +558,9 @@
             <!--  Todo   -->
         </xsl:variable>
         <xsl:variable name="encodedProjectRootPath">
-            <xsl:if test="string($uncodedProjectRootPath) != ''">
-                <!-- Replace % to %25 and space to %20 to get an encoded path-->
-                <xsl:value-of select="replace(replace($uncodedProjectRootPath, '%', '%25'), ' ', '%20')"/>
-            </xsl:if>
+            <xsl:call-template name="getEncodedProjectRootPath">
+                <xsl:with-param name="originalProjectRootPath" select="$uncodedProjectRootPath"/>
+            </xsl:call-template>
         </xsl:variable>
         <xsl:choose>
             <xsl:when test="string($uncodedProjectRootPath) != '' and contains($uri, $uncodedProjectRootPath)">
@@ -569,6 +574,11 @@
                 <xsl:value-of select="''"/>
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="getEncodedProjectRootPath">
+        <xsl:param name="originalProjectRootPath"/>
+        <xsl:value-of select="replace(replace($originalProjectRootPath, '%', '%25'), ' ', '%20')"/>
     </xsl:template>
     
     <!-- TODO optimize -->
