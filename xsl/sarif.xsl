@@ -39,7 +39,7 @@
                     <xsl:value-of select="$processedUri"/>
                 </xsl:attribute>
                 <xsl:attribute name="encodedUri">
-                    <xsl:call-template name="getEncodedProjectRootPath">
+                    <xsl:call-template name="getEncodedString">
                         <xsl:with-param name="originalProjectRootPath" select="$processedUri"/>
                     </xsl:call-template>
                 </xsl:attribute>
@@ -558,7 +558,7 @@
             <!--  Todo   -->
         </xsl:variable>
         <xsl:variable name="encodedProjectRootPath">
-            <xsl:call-template name="getEncodedProjectRootPath">
+            <xsl:call-template name="getEncodedString">
                 <xsl:with-param name="originalProjectRootPath" select="$uncodedProjectRootPath"/>
             </xsl:call-template>
         </xsl:variable>
@@ -576,7 +576,7 @@
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template name="getEncodedProjectRootPath">
+    <xsl:template name="getEncodedString">
         <xsl:param name="originalProjectRootPath"/>
         <xsl:value-of select="replace(replace($originalProjectRootPath, '%', '%25'), ' ', '%20')"/>
     </xsl:template>
