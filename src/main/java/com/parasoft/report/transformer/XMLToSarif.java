@@ -27,10 +27,9 @@ import picocli.CommandLine.Option;
 
 import java.io.File;
 import java.text.MessageFormat;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.regex.Pattern;
 
 @Command(name = "xml2sarif",
         mixinStandardHelpOptions = true, version = "xml2sarif 1.0",
@@ -40,6 +39,8 @@ import java.util.concurrent.Callable;
 public class XMLToSarif implements Callable<Integer> {
 
     public static final String SARIF_XSL_RESOURCE_PATH = "/xsl/sarif.xsl";
+
+    private static final String ABSOLUTE_PATH_REGEX = "^(?:[a-zA-Z]:/|/).*";
 
     @Option(names = {"--inputXmlReport", "-i"}, required = true, description = "Path to the input XML report of static analysis.")
     private File inputXmlReport;
@@ -69,6 +70,13 @@ public class XMLToSarif implements Callable<Integer> {
         }
     }
 
+    /**
+     * For unit test
+     */
+    String getProjectRootPaths() {
+        return projectRootPaths;
+    }
+
     private void checkInputAndOutputReportParams() {
         if (this.inputXmlReport == null) {
             throw new IllegalArgumentException("Input XML report is required.");
@@ -94,8 +102,18 @@ public class XMLToSarif implements Callable<Integer> {
     private void checkProjectRootPathsParam() {
         if (this.projectRootPaths != null && !this.projectRootPaths.trim().isEmpty()) {
             String[] pathsArray = this.projectRootPaths.trim().split(",");
-            // TODO: validate paths
-            this.projectRootPaths = String.join(",", Arrays.stream(pathsArray).map(String::trim).toArray(String[]::new));
+            String[] trimmedPaths = Arrays.stream(pathsArray).map((path) -> path.trim().replace("\\", "/")).toArray(String[]::new);
+            for (String path : trimmedPaths) {
+                if (!this.isAbsolutePath(path)) {
+                    throw new IllegalArgumentException(MessageFormat.format("Project root path must be an absolute path: {0}", path));
+                }
+                File rootFile = new File(path);
+                if (!rootFile.exists()) {
+                    Logger.warn(MessageFormat.format("WARN: Project root path does not exist: {0}.", path));
+                }
+            }
+            this.avoidDuplicateProjectRootPaths(trimmedPaths);
+            this.projectRootPaths = String.join(",", trimmedPaths);
         } else {
             this.projectRootPaths = null;
         }
@@ -115,5 +133,26 @@ public class XMLToSarif implements Callable<Integer> {
             throw new IllegalArgumentException(MessageFormat.format("Transformation error: {0}", e.getMessage()));
         }
         Logger.info(MessageFormat.format("SARIF report has been created: {0}", this.outputSarifReport.getAbsolutePath()));
+    }
+
+    private boolean isAbsolutePath(String path) {
+        Pattern pattern = Pattern.compile(ABSOLUTE_PATH_REGEX);
+        return pattern.matcher(path).matches();
+    }
+
+    private void avoidDuplicateProjectRootPaths(String[] paths) {
+        Set<String> uniquePaths = new HashSet<>();
+        for (String path : paths) {
+            path = path.endsWith("/") ? path : path + "/";
+            if (uniquePaths.contains(path)) {
+                throw new IllegalArgumentException(MessageFormat.format("Duplicate project root path found: {0}", path));
+            }
+            for (String uniquePath : uniquePaths) {
+                if (path.contains(uniquePath) || uniquePath.contains(path)) {
+                    throw new IllegalArgumentException(MessageFormat.format("Project path contains or is contained by another path: {0} and {1}", path, uniquePath));
+                }
+            }
+            uniquePaths.add(path);
+        }
     }
 }
