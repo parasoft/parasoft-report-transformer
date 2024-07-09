@@ -22,10 +22,12 @@ import picocli.CommandLine.Command;
 
 import java.util.concurrent.Callable;
 
-@Command(name = "parasoft-report-transformer",
-        mixinStandardHelpOptions = true, version = "parasoft-report-transformer 1.0",
-        description = "Convert XML report to other format report.",
-        subcommands = { XMLToSarif.class }
+@Command(
+    name = "parasoft-report-transformer",
+    mixinStandardHelpOptions = true,
+    version = "parasoft-report-transformer 1.0",
+    description = "Convert Parasoft XML report to other formats.",
+    subcommands = { XMLToSarif.class }
 )
 public class Transformer implements Callable<Integer> {
     public static void main(String[] args) {
@@ -36,7 +38,7 @@ public class Transformer implements Callable<Integer> {
     @Override
     public Integer call() {
         Logger.info("Run the following command to show usage help:");
-        Logger.info("parasoft-report-transformer --help");
+        Logger.info("  parasoft-report-transformer --help");
         return 0;
     }
 }

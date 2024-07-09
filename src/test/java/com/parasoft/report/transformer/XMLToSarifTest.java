@@ -192,7 +192,7 @@ public class XMLToSarifTest {
             int exitCode = command.execute(args);
 
             assertEquals(1, exitCode);
-            mockedLogger.verify(() -> Logger.error(startsWith("ERROR: Input XML report file does not exist:")));
+            mockedLogger.verify(() -> Logger.error(startsWith("ERROR: Input Parasoft XML report file does not exist:")));
             mockedLogger.verify(() -> Logger.error(endsWith("notExist.xml.")));
         });
     }
@@ -206,7 +206,7 @@ public class XMLToSarifTest {
             int exitCode = command.execute(args);
 
             assertEquals(1, exitCode);
-            mockedLogger.verify(() -> Logger.error(startsWith("ERROR: Input XML report is not a file:")));
+            mockedLogger.verify(() -> Logger.error(startsWith("ERROR: Input Parasoft XML report is not a file:")));
             mockedLogger.verify(() -> Logger.error(endsWith("xml.")));
         });
     }
@@ -214,15 +214,22 @@ public class XMLToSarifTest {
     @Test
     public void testXMLToSarif_outputSarifReportIsNotSarif() {
         testWithMockedLogger(mockedLogger -> {
-            XMLToSarif xml2sarif = new XMLToSarif();
-            CommandLine command  = new CommandLine(xml2sarif);
-            String[] args = {"--inputXmlReport", TEST_RESOURCES_LOC + "/jtest-report-202401.xml",
-                             "--outputSarifReport", TEST_RESOURCES_LOC + "/jtest-report-202401.notEndWithSarif"};
-            int exitCode = command.execute(args);
+            try {
+                XMLToSarif xml2sarif = new XMLToSarif();
+                CommandLine command = new CommandLine(xml2sarif);
+                String[] args = {"--inputXmlReport", TEST_RESOURCES_LOC + "/jtest-report-202401.xml",
+                                 "--outputSarifReport", TEST_RESOURCES_LOC + "/jtest-report-202401.notSarifExtension"};
+                int exitCode = command.execute(args);
 
-            assertEquals(1, exitCode);
-            mockedLogger.verify(() -> Logger.error(startsWith("ERROR: Output SARIF report must have .sarif extension:")));
-            mockedLogger.verify(() -> Logger.error(endsWith("jtest-report-202401.notEndWithSarif.")));
+                assertEquals(0, exitCode);
+                mockedLogger.verify(() -> Logger.warn("WARN: Output file name does not end with .sarif, automatically appended the extension."));
+            } finally {
+                File sariFile = new File(TEST_RESOURCES_LOC + "/jtest-report-202401.notSarifExtension.sarif");
+                assertTrue(sariFile.exists());
+                if (sariFile.exists()) {
+                    sariFile.delete();
+                }
+            }
         });
     }
 

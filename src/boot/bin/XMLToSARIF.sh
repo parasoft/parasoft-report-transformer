@@ -3,7 +3,7 @@ print_usage() {
     echo "Usage: XMLToSARIF.sh -i <inputXmlReport> [-o <outputSarifReport>] [-t <toolOrJavaHomeDir>]"
     echo ""
     echo "Options:"
-    echo "  -i, --inputXmlReport      Path to the input XML report. (required)"
+    echo "  -i, --inputXmlReport      Path to the input Parasoft XML report. (required)"
     echo "  -o, --outputSarifReport   Path to the output SARIF report."
     echo "  -t, --toolOrJavaHomeDir   Path to the tool or Java home directory."
     echo ""
@@ -47,6 +47,10 @@ getJavaPath() {
 }
 
 # 1.Initialize variables:
+BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
+BIN_DIR="$BASE_DIR/bin"
+export PATH="$BIN_DIR:$PATH"
+
 parasoft_tool_or_java_root_path=""
 xml_report_path=""
 sarif_report_path=""
@@ -96,7 +100,7 @@ else
     if java_path=$(getJavaPath "$parasoft_tool_or_java_root_path"); then
         java_home="${java_path%bin/java}"
         export JAVA_HOME=$java_home
-        echo "Using temporary JAVA_HOME: $JAVA_HOME"
+        echo "Java home directory temporarily set to: $JAVA_HOME"
     else
         echo "Error: Tool or Java home directory is incorrect: \"$parasoft_tool_or_java_root_path\". Please check \"-t\" or \"--toolOrJavaHomeDir\" value."
         exit 1;
@@ -111,5 +115,5 @@ if [ -n "$sarif_report_path" ]; then
   args+=(-o "$sarif_report_path")
 fi
 
-./parasoft-report-transformer xml2sarif "${args[@]}"
+parasoft-report-transformer xml2sarif "${args[@]}"
 
