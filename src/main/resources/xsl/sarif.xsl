@@ -360,6 +360,7 @@
 
     <xsl:template name="get_artifacts">
         <xsl:variable name="checkedFiles">
+            <!--   Extract <Loc> elements     -->
             <xsl:variable name="locs">
                 <xsl:choose>
                     <xsl:when test="$isCPPProReport">
@@ -370,6 +371,7 @@
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
+            <!--   Packaged into general elements     -->
             <xsl:choose>
                 <xsl:when test="$isCPPProReport">
                     <xsl:for-each select="$locs/Loc/@fsPath">
@@ -390,7 +392,7 @@
         <xsl:for-each select="$checkedFiles/URI">
             <xsl:variable name="matchedProjectPath">
                 <xsl:call-template name="get_matched_project_path">
-                    <xsl:with-param name="checkedFile" select="current()"/>
+                    <xsl:with-param name="nodeWithUriAttribute" select="current()"/>
                 </xsl:call-template>
             </xsl:variable>
             <xsl:if test="position() != 1">,</xsl:if>
@@ -430,9 +432,11 @@
     </xsl:template>
 
     <xsl:template name="get_matched_project_path">
-        <xsl:param name="checkedFile"/>
-        <xsl:variable name="defaultProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[contains($checkedFile/@uri, @uri)]"/>
+        <!--   Select the matched project path from tempProjectRootPathElements by uri attribute    -->
+        <xsl:param name="nodeWithUriAttribute"/>
+        <xsl:variable name="defaultProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[contains($nodeWithUriAttribute/@uri, @uri)]"/>
         <xsl:choose>
+            <!--    Return the matched project path    -->
             <xsl:when test="$defaultProjectPath">
                 <RESULT>
                     <xsl:attribute name="name"><xsl:value-of select="$defaultProjectPath/@name"/></xsl:attribute>
@@ -440,7 +444,7 @@
                 </RESULT>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="encodedProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[contains($checkedFile/@uri, @encodedUri)]"/>
+                <xsl:variable name="encodedProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[contains($nodeWithUriAttribute/@uri, @encodedUri)]"/>
                 <xsl:if test="$encodedProjectPath">
                     <RESULT>
                         <xsl:attribute name="name"><xsl:value-of select="$encodedProjectPath/@name"/></xsl:attribute>
