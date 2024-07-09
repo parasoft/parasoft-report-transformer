@@ -104,8 +104,8 @@ public class XMLToSarif implements Callable<Integer> {
     private void checkProjectRootPathsParam() {
         if (this.projectRootPaths != null && !this.projectRootPaths.trim().isEmpty()) {
             String[] pathsArray = this.projectRootPaths.trim().split(",");
-            String[] trimmedPaths = Arrays.stream(pathsArray).map((path) -> path.trim().replace("\\", "/")).toArray(String[]::new);
-            for (String path : trimmedPaths) {
+            String[] processedPaths = Arrays.stream(pathsArray).map((path) -> path.trim().replace("\\", "/")).toArray(String[]::new);
+            for (String path : processedPaths) {
                 if (!this.isAbsolutePath(path)) {
                     throw new IllegalArgumentException(MessageFormat.format("Project root path must be an absolute path: {0}", path));
                 }
@@ -114,8 +114,8 @@ public class XMLToSarif implements Callable<Integer> {
                     Logger.warn(MessageFormat.format("WARN: Project root path does not exist: {0}.", path));
                 }
             }
-            this.avoidDuplicateProjectRootPaths(trimmedPaths);
-            this.projectRootPaths = String.join(",", trimmedPaths);
+            this.avoidDuplicateProjectRootPaths(processedPaths);
+            this.projectRootPaths = String.join(",", processedPaths);
         } else {
             this.projectRootPaths = null;
         }
@@ -150,7 +150,7 @@ public class XMLToSarif implements Callable<Integer> {
                 throw new IllegalArgumentException(MessageFormat.format("Duplicate project root path found: {0}", path));
             }
             for (String uniquePath : uniquePaths) {
-                if (path.contains(uniquePath) || uniquePath.contains(path)) {
+                if (path.startsWith(uniquePath) || uniquePath.startsWith(path)) {
                     throw new IllegalArgumentException(MessageFormat.format("Project path contains or is contained by another path: {0} and {1}", path, uniquePath));
                 }
             }
