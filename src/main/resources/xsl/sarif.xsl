@@ -610,6 +610,7 @@
                     <xsl:when test="$locNode">
                         <xsl:choose>
                             <xsl:when test="$locNode/@scPath">
+                                <xsl:text>"uri": "</xsl:text>
                                 <xsl:value-of select="$locNode/@scPath" /><xsl:text>"</xsl:text>
                                 <xsl:variable name="uriBaseId" select="$locNode/@repRef"/>
                                 <xsl:if test="$uriBaseId != ''">
