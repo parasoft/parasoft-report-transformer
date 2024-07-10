@@ -16,4 +16,5 @@ class TransformerTest {
 
         assertEquals(0, exitCode);
     }
+
 }
