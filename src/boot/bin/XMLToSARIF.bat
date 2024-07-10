@@ -1,15 +1,22 @@
 @echo off
 
-set PARAM_NAME=%~1
-set PARAM_VALUE=%~2
+setlocal enabledelayedexpansion
+
+for %%i in ("%~dp0..") do set "BASE_DIR=%%~fi"
+set "BIN_DIR=%BASE_DIR%\bin"
+set "PATH=%BIN_DIR%;%PATH%"
+
+if "%~1"=="" goto :required_param_error
+
 set XML_REPORT_PATH=
 set SARIF_REPORT_PATH=
 set JAVA_OR_PARASOFT_TOOL_ROOT_PATH=
-set JAVA_PATH=
-
-if "%PARAM_NAME%"=="" goto :required_param_error
 
 :parse_args
+set PARAM_NAME=%~1
+set PARAM_VALUE=%~2
+if "%PARAM_NAME%"=="" goto :end_parse_args
+
 REM Check if the parameter is empty or starts with "-" or "--"
 if "%PARAM_VALUE%"=="" (
     goto :param_value_error
@@ -34,22 +41,21 @@ if "%PARAM_NAME%"=="-i" (
     echo Error: Invalid option "%PARAM_NAME%"
     goto :print_usage
 )
+shift
+shift
+goto :parse_args
 
-REM Change to next parameter name and value
-shift
-shift
-set PARAM_NAME=%~1
-set PARAM_VALUE=%~2
-if not "%PARAM_NAME%"=="" goto :parse_args
+:end_parse_args
 
 REM Validate option values
 if "%XML_REPORT_PATH%"=="" goto :required_param_error
 
 REM Find Java path
 if "%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%"=="" (
-    if not exist "%JAVA_HOME%" (
+    where java >nul 2>&1
+    if %errorlevel% neq 0 (
         echo Error: Java is not found. Please add Java in environment variable or provide "-t" or "--toolOrJavaHomeDir" option.
-        exit /b 1;
+        exit /b 1
     )
 ) else (
     if not exist "%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%" (
@@ -61,9 +67,11 @@ if "%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%"=="" (
     REM ## bin                       -- Java home directory
     REM ## bin/dottest/Jre_x64/bin   -- DotTest installation directory
     REM ## bin/jre/bin               -- Jtest, C++Test installation directory
-	for %%p in (. bin\dottest\Jre_x64 bin\jre) do (
-        if exist "%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%\%%p\bin\java.exe" (
-            set JAVA_PATH="%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%\%%p"
+	for %%p in (bin bin\dottest\Jre_x64\bin bin\jre\bin) do (
+        if exist "%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%\%%p\java.exe" (
+            set java_path=%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%\%%p
+            set JAVA_HOME=!java_path:~0,-4!
+            echo Java home directory temporarily set to: "!JAVA_HOME!"
             goto :generate_report
         )
     )
@@ -72,19 +80,13 @@ if "%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%"=="" (
 )
 
 :generate_report
-REM Set java environment if "-t" or "--toolOrJavaHomeDir" is set
-if exist "%JAVA_PATH%" (
-    set JAVA_HOME=%JAVA_PATH%
-)
-echo Using temporary JAVA_HOME: %JAVA_HOME%
-
 REM Generate SARIF report
 set COMMAND_ARGS=-i "%XML_REPORT_PATH%"
 if not "%SARIF_REPORT_PATH%"=="" (
     set COMMAND_ARGS=%COMMAND_ARGS% -o "%SARIF_REPORT_PATH%"
 )
 
-call parasoft-report-transformer.bat xml2sarif %COMMAND_ARGS%
+call parasoft-report-transformer xml2sarif %COMMAND_ARGS%
 exit /b %errorlevel%
 
 :required_param_error
@@ -103,3 +105,5 @@ echo   -o, --outputSarifReport   Path to the output SARIF report.
 echo   -t, --toolOrJavaHomeDir   Path to the tool or Java home directory.
 echo.
 exit /b 1
+
+endlocal
