@@ -248,17 +248,25 @@ public class XMLToSarifTest {
     }
 
     @Test
-    public void testXMLToSarif_invalidProjectRootPaths_duplicatePath() {
+    public void testXMLToSarif_duplicateProjectRootPaths() {
         testWithMockedLogger(mockedLogger -> {
-            XMLToSarif xml2sarif = new XMLToSarif();
-            CommandLine command  = new CommandLine(xml2sarif);
-            String[] args = {"--inputXmlReport", TEST_RESOURCES_LOC + "/jtest-report 202401.xml",
-                             "--outputSarifReport", TEST_RESOURCES_LOC + "/jtest-report 202401.sarif",
-                             "--projectRootPaths", "D:\\JavaProjectTemplate, D:/JavaProjectTemplate-1, D:/JavaProjectTemplate-1"};
-            int exitCode = command.execute(args);
+            try {
+                XMLToSarif xml2sarif = new XMLToSarif();
+                CommandLine command  = new CommandLine(xml2sarif);
+                String[] args = {"--inputXmlReport", TEST_RESOURCES_LOC + "/jtest-report 202401.xml",
+                                 "--outputSarifReport", TEST_RESOURCES_LOC + "/jtest-report 202401.sarif",
+                                 "--projectRootPaths", "D:\\JavaProjectTemplate, D:/JavaProjectTemplate"};
+                int exitCode = command.execute(args);
 
-            assertEquals(1, exitCode);
-            mockedLogger.verify(() -> Logger.error(startsWith("ERROR: Duplicate project root path found: D:/JavaProjectTemplate-1/")));
+                assertEquals(0, exitCode);
+                mockedLogger.verify(() -> Logger.warn("WARN: Duplicate project root path found: D:/JavaProjectTemplate/"));
+            } finally {
+                File sariFile = new File(TEST_RESOURCES_LOC + "/jtest-report 202401.sarif");
+                assertTrue(sariFile.exists());
+                if (sariFile.exists()) {
+                    sariFile.delete();
+                }
+            }
         });
     }
 
@@ -284,11 +292,12 @@ public class XMLToSarifTest {
             CommandLine command  = new CommandLine(xml2sarif);
             String[] args = {"--inputXmlReport", TEST_RESOURCES_LOC + "/jtest-report 202401.xml",
                     "--outputSarifReport", TEST_RESOURCES_LOC + "/jtest-report 202401.sarif",
-                    "--projectRootPaths", "D:/JavaProjectTemplate, D:/JavaProjectTemplate/sub"};
+                    "--projectRootPaths", "D:/JavaProjectTemplate, D:/JavaProjectTemplate, D:/JavaProjectTemplate/sub"};
             int exitCode = command.execute(args);
 
             assertEquals(1, exitCode);
-            mockedLogger.verify(() -> Logger.error(startsWith("ERROR: Project path contains or is contained by another path: D:/JavaProjectTemplate/sub/ and D:/JavaProjectTemplate/")));
+            mockedLogger.verify(() -> Logger.warn("WARN: Duplicate project root path found: D:/JavaProjectTemplate/"));
+            mockedLogger.verify(() -> Logger.error("ERROR: Project path conflict: Path 'D:/JavaProjectTemplate/sub/' contains or is contained by 'D:/JavaProjectTemplate/', which is not supported."));
         });
     }
 

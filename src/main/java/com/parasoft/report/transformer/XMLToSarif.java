@@ -111,7 +111,7 @@ public class XMLToSarif implements Callable<Integer> {
                 }
                 File rootFile = new File(path);
                 if (!rootFile.exists()) {
-                    Logger.warn(MessageFormat.format("WARN: Project root path does not exist: {0}.", path));
+                    Logger.warn(MessageFormat.format("WARN: Project root path does not exist on this machine: {0}.", path));
                 }
             }
             this.avoidDuplicateProjectRootPaths(processedPaths);
@@ -147,11 +147,12 @@ public class XMLToSarif implements Callable<Integer> {
         for (String path : paths) {
             path = path.endsWith("/") ? path : path + "/";
             if (uniquePaths.contains(path)) {
-                throw new IllegalArgumentException(MessageFormat.format("Duplicate project root path found: {0}", path));
+                Logger.warn(MessageFormat.format("WARN: Duplicate project root path found: {0}", path));
+                continue;
             }
             for (String uniquePath : uniquePaths) {
                 if (path.startsWith(uniquePath) || uniquePath.startsWith(path)) {
-                    throw new IllegalArgumentException(MessageFormat.format("Project path contains or is contained by another path: {0} and {1}", path, uniquePath));
+                    throw new IllegalArgumentException(MessageFormat.format("Project path conflict: Path ''{0}'' contains or is contained by ''{1}'', which is not supported.", path, uniquePath));
                 }
             }
             uniquePaths.add(path);
