@@ -434,7 +434,7 @@
     <xsl:template name="get_matched_project_path">
         <!--   Select the matched project path from tempProjectRootPathElements by uri attribute    -->
         <xsl:param name="nodeWithUriAttribute"/>
-        <xsl:variable name="defaultProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[contains($nodeWithUriAttribute/@uri, @uri)]"/>
+        <xsl:variable name="defaultProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[starts-with($nodeWithUriAttribute/@uri, @uri)]"/>
         <xsl:choose>
             <!--    Return the matched project path    -->
             <xsl:when test="$defaultProjectPath">
@@ -444,7 +444,7 @@
                 </RESULT>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="encodedProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[contains($nodeWithUriAttribute/@uri, @encodedUri)]"/>
+                <xsl:variable name="encodedProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[starts-with($nodeWithUriAttribute/@uri, @encodedUri)]"/>
                 <xsl:if test="$encodedProjectPath">
                     <RESULT>
                         <xsl:attribute name="name"><xsl:value-of select="$encodedProjectPath/@name"/></xsl:attribute>
