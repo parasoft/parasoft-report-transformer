@@ -1,12 +1,12 @@
 #!/bin/bash
 print_usage() {
-    echo "Usage: XMLToSARIF.sh -i <inputXmlReport> [-o <outputSarifReport>] [-t <toolOrJavaHomeDir>] [-p <projectPaths>]"
+    echo "Usage: XMLToSARIF.sh -i <inputXmlReport> [-o <outputSarifReport>] [-t <toolOrJavaHomeDir>] [-p <projectRootPaths>]"
     echo ""
     echo "Options:"
     echo "  -i, --inputXmlReport      Path to the input Parasoft XML report. (required)"
     echo "  -o, --outputSarifReport   Path to the output SARIF report."
     echo "  -t, --toolOrJavaHomeDir   Path to the tool or Java home directory."
-    echo "  -p, --projectPaths        Comma-separated paths to the project roots."
+    echo "  -p, --projectRootPaths    Comma-separated paths to the project roots."
     echo ""
 }
 
@@ -55,7 +55,7 @@ export PATH="$BIN_DIR:$PATH"
 parasoft_tool_or_java_root_path=""
 xml_report_path=""
 sarif_report_path=""
-project_paths=""
+project_root_paths=""
 
 # 2. Save option values into variables
 while [[ $# -gt 0 ]] ; do
@@ -74,9 +74,9 @@ while [[ $# -gt 0 ]] ; do
         check_param "$param" "$value"
         parasoft_tool_or_java_root_path="$value"
         shift 2 ;;
-    -p|--projectPaths)
+    -p|--projectRootPaths)
         check_param "$param" "$value"
-        project_paths="$value"
+        project_root_paths="$value"
         shift 2 ;;
     --) shift ; break ;;
     *)
@@ -120,8 +120,8 @@ args=(
 if [ -n "$sarif_report_path" ]; then
   args+=(-o "$sarif_report_path")
 fi
-if [ -n "$project_paths" ]; then
-  args+=(-p "$project_paths")
+if [ -n "$project_root_paths" ]; then
+  args+=(-p "$project_root_paths")
 fi
 
 parasoft-report-transformer xml2sarif "${args[@]}"
