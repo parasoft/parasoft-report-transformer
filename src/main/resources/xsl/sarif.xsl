@@ -623,7 +623,7 @@
                                         <!-- Use relative uri when @repRef exists in <Loc> -->
                                         <xsl:call-template name="relative_artifact_location">
                                             <xsl:with-param name="uri" select="$scUri"/>
-                                            <xsl:with-param name="uriBaseId" select="$scUriBaseId"/>
+                                            <xsl:with-param name="uriBaseId">ROOT_<xsl:value-of select="$scUriBaseId"/></xsl:with-param>
                                         </xsl:call-template>
                                     </xsl:when>
                                     <xsl:otherwise>
@@ -688,29 +688,6 @@
         <xsl:text>", "uriBaseId": "</xsl:text>
         <xsl:value-of select="$uriBaseId"/>
         <xsl:text>"</xsl:text>
-    </xsl:template>
-
-    <xsl:template name="getMatchedProjectRootPath_by_loc">
-        <xsl:param name="locNode"/>
-        <xsl:variable name="uri" select="$locNode/@uri"/>
-        <xsl:variable name="uncodedProjectRootPath">
-            <!-- TODO: get value from tempProjectRootPathElements -->
-        </xsl:variable>
-        <xsl:variable name="encodedProjectRootPath">
-            <!-- TODO: get value from tempProjectRootPathElements -->
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="string($uncodedProjectRootPath) != '' and contains($uri, $uncodedProjectRootPath)">
-                <xsl:value-of select="$uncodedProjectRootPath"/>
-            </xsl:when>
-            <!-- Using encoded project root paths when the uri arrtibute of <Loc> tag in Parasoft tool report(e.g. jtest report) is encoded -->
-            <xsl:when test="string($encodedProjectRootPath) != '' and contains($uri, $encodedProjectRootPath)">
-                <xsl:value-of select="$encodedProjectRootPath"/>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="''"/>
-            </xsl:otherwise>
-        </xsl:choose>
     </xsl:template>
 
     <xsl:template name="getEncodedPath">
