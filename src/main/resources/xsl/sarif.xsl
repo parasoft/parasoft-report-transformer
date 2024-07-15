@@ -38,9 +38,25 @@
         <xsl:variable name="projectRootPathArray" select="tokenize($projectRootPaths, ',')"/>
         <xsl:for-each select="$projectRootPathArray">
             <xsl:variable name="contactedUri">
-                <xsl:value-of select="$uriPrefix"/>
-                <!-- Trim the spaces at the front and back ends -->
-                <xsl:value-of select="replace(replace(., '^\s+', ''), '\s+$', '')"/>
+                <xsl:choose>
+                    <xsl:when test="$uriPrefix != ''">
+                        <xsl:value-of select="$uriPrefix"/>
+                        <xsl:choose>
+                            <xsl:when test="starts-with(., '/')">
+                                <!--   Handle Linux absolute path   -->
+                                <!-- Trim the spaces at the front and back ends -->
+                                <xsl:value-of select="replace(replace(replace(., '^/', ''), '^\s+', ''), '\s+$', '')"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <!-- Trim the spaces at the front and back ends -->
+                                <xsl:value-of select="replace(replace(., '^\s+', ''), '\s+$', '')"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="replace(replace(., '^\s+', ''), '\s+$', '')"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:variable>
             <xsl:variable name="translatedUri" select="translate($contactedUri, '\', '/')"/>
             <xsl:variable name="processedUri">
