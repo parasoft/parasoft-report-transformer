@@ -91,6 +91,11 @@ if not "%SARIF_REPORT_PATH%"=="" (
     set COMMAND_ARGS=%COMMAND_ARGS% -o "%SARIF_REPORT_PATH%"
 )
 if not "%PROJECT_ROOT_PATHS%"=="" (
+    :remove_trailing_backslashes_and_spaces
+    if "%PROJECT_ROOT_PATHS:~-1%"=="\" (
+        set "PROJECT_ROOT_PATHS=%PROJECT_ROOT_PATHS:~0,-1%"
+        goto :remove_trailing_backslashes_and_spaces
+    )
     set COMMAND_ARGS=%COMMAND_ARGS% -p "%PROJECT_ROOT_PATHS%"
 )
 
