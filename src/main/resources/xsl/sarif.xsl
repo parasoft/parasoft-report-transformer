@@ -387,7 +387,7 @@
         <xsl:for-each select="$checkedFiles/URI">
             <xsl:variable name="matchedProjectPath">
                 <xsl:call-template name="get_matching_project_path">
-                    <xsl:with-param name="checkedFileWithUri" select="current()"/>
+                    <xsl:with-param name="matchingURI" select="current()/@uri"/>
                 </xsl:call-template>
             </xsl:variable>
             <xsl:if test="position() != 1">,</xsl:if>
@@ -428,8 +428,8 @@
 
     <xsl:template name="get_matching_project_path">
         <!--   Select the matched project path from tempProjectRootPathElements by uri attribute    -->
-        <xsl:param name="checkedFileWithUri"/>
-        <xsl:variable name="defaultProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[starts-with($checkedFileWithUri/@uri, @uri)]"/>
+        <xsl:param name="matchingURI"/>
+        <xsl:variable name="defaultProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[starts-with($matchingURI, @uri)]"/>
         <xsl:choose>
             <!--    Return the matched project path    -->
             <xsl:when test="$defaultProjectPath">
@@ -439,7 +439,7 @@
                 </RESULT>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="encodedProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[starts-with($checkedFileWithUri/@uri, @encodedUri)]"/>
+                <xsl:variable name="encodedProjectPath" select="$tempProjectRootPathElements/PROJECTROOT[starts-with($matchingURI, @encodedUri)]"/>
                 <xsl:if test="$encodedProjectPath">
                     <RESULT>
                         <xsl:attribute name="name"><xsl:value-of select="$encodedProjectPath/@name"/></xsl:attribute>
@@ -580,7 +580,7 @@
                         <xsl:variable name="matchedProjectRootPath">
                             <!--  Get matching project root path with current <Loc> -->
                             <xsl:call-template name="get_matching_project_path">
-                                <xsl:with-param name="checkedFileWithUri" select="$locNode"/>
+                                <xsl:with-param name="matchingURI" select="$locNode/@uri"/>
                             </xsl:call-template>
                         </xsl:variable>
                         <xsl:variable name="isAnyMatched" select="$matchedProjectRootPath/RESULT"/>
@@ -603,7 +603,7 @@
                     <xsl:otherwise>
                         <!-- No <Loc> matches with current violation -->
                         <xsl:call-template name="default_artifact_location">
-                            <xsl:with-param name="uri" select="@locFile"/>
+                            <xsl:with-param name="uri" select="$locFile"/>
                         </xsl:call-template>
                     </xsl:otherwise>
                 </xsl:choose>
