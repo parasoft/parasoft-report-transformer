@@ -106,7 +106,7 @@ else
     if java_path=$(getJavaPath "$parasoft_tool_or_java_root_path"); then
         java_home="${java_path%bin/java}"
         export JAVA_HOME=$java_home
-        echo "Java home directory temporarily set to: $JAVA_HOME"
+        echo "Java home directory set to: $JAVA_HOME"
     else
         echo "Error: Tool or Java home directory is incorrect: \"$parasoft_tool_or_java_root_path\". Please check \"-t\" or \"--toolOrJavaHomeDir\" value."
         exit 1;

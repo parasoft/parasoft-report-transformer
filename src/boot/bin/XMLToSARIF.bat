@@ -76,7 +76,7 @@ if "%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%"=="" (
         if exist "%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%\%%p\java.exe" (
             set java_path=%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%\%%p
             set JAVA_HOME=!java_path:~0,-4!
-            echo Java home directory temporarily set to: "!JAVA_HOME!"
+            echo Java home directory set to: "!JAVA_HOME!"
             goto :generate_report
         )
     )

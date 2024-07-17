@@ -97,7 +97,7 @@ public class XMLToSarif implements Callable<Integer> {
             this.outputSarifReport = new File(this.inputXmlReport.getParentFile(), this.inputXmlReport.getName().replace(".xml", ".sarif"));
         } else if(!this.outputSarifReport.getAbsolutePath().endsWith(".sarif")) {
             this.outputSarifReport = new File(this.outputSarifReport.getAbsolutePath() + ".sarif");
-            Logger.warn("WARN: Output file name does not end with .sarif, automatically appended the extension.");
+            Logger.warn("WARNING: Output file name does not end with .sarif, automatically appended the extension.");
         }
     }
 
@@ -111,7 +111,7 @@ public class XMLToSarif implements Callable<Integer> {
                 }
                 File rootFile = new File(path);
                 if (!rootFile.exists()) {
-                    Logger.warn(MessageFormat.format("WARN: Project root path does not exist on this machine: {0}.", path));
+                    Logger.warn(MessageFormat.format("WARNING: Project root path does not exist on this machine: {0}.", path));
                 }
             }
             this.avoidDuplicateProjectRootPaths(processedPaths);
@@ -147,7 +147,7 @@ public class XMLToSarif implements Callable<Integer> {
         for (String path : paths) {
             path = path.endsWith("/") ? path : path + "/";
             if (uniquePaths.contains(path)) {
-                Logger.warn(MessageFormat.format("WARN: Duplicate project root path found: {0}", path));
+                Logger.warn(MessageFormat.format("WARNING: Duplicate project root path found: {0}", path));
                 continue;
             }
             for (String uniquePath : uniquePaths) {

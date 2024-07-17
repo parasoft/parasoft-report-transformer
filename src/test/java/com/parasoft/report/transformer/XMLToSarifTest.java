@@ -222,7 +222,7 @@ public class XMLToSarifTest {
                 int exitCode = command.execute(args);
 
                 assertEquals(0, exitCode);
-                mockedLogger.verify(() -> Logger.warn("WARN: Output file name does not end with .sarif, automatically appended the extension."));
+                mockedLogger.verify(() -> Logger.warn("WARNING: Output file name does not end with .sarif, automatically appended the extension."));
             } finally {
                 File sariFile = new File(TEST_RESOURCES_LOC + "/jtest-report-202401.notSarifExtension.sarif");
                 assertTrue(sariFile.exists());
@@ -259,7 +259,7 @@ public class XMLToSarifTest {
                 int exitCode = command.execute(args);
 
                 assertEquals(0, exitCode);
-                mockedLogger.verify(() -> Logger.warn("WARN: Duplicate project root path found: D:/JavaProjectTemplate/"));
+                mockedLogger.verify(() -> Logger.warn("WARNING: Duplicate project root path found: D:/JavaProjectTemplate/"));
             } finally {
                 File sariFile = new File(TEST_RESOURCES_LOC + "/jtest-report 202401.sarif");
                 assertTrue(sariFile.exists());
@@ -296,7 +296,7 @@ public class XMLToSarifTest {
             int exitCode = command.execute(args);
 
             assertEquals(1, exitCode);
-            mockedLogger.verify(() -> Logger.warn("WARN: Duplicate project root path found: D:/JavaProjectTemplate/"));
+            mockedLogger.verify(() -> Logger.warn("WARNING: Duplicate project root path found: D:/JavaProjectTemplate/"));
             mockedLogger.verify(() -> Logger.error("ERROR: Project path conflict: Path 'D:/JavaProjectTemplate/sub/' contains or is contained by 'D:/JavaProjectTemplate/', which is not supported."));
         });
     }
