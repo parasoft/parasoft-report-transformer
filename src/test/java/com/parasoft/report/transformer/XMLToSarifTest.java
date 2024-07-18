@@ -69,7 +69,7 @@ public class XMLToSarifTest {
                 "jtest-report-202401-2.sarif",
                 "jtest-report-202401-2.sarif",
                 "D:/JavaProjectTemplate/; D:/JavaProjectTemplate-1; D:\\JavaProjectTemplate-2",
-                "D:/JavaProjectTemplate/,D:/JavaProjectTemplate-1/,D:/JavaProjectTemplate-2/");
+                "D:/JavaProjectTemplate/;D:/JavaProjectTemplate-1/;D:/JavaProjectTemplate-2/");
     }
 
     @Test
@@ -79,7 +79,7 @@ public class XMLToSarifTest {
                 "jtest-report-202401-3.sarif",
                 "jtest-report-202401-3.sarif",
                 "/JavaProjectTemplate/; D:/JavaProjectTemplate-1",
-                "/JavaProjectTemplate/,D:/JavaProjectTemplate-1/");
+                "/JavaProjectTemplate/;D:/JavaProjectTemplate-1/");
     }
 
     @Test
@@ -89,7 +89,7 @@ public class XMLToSarifTest {
                 "jtest_report-20230201-multiple_projects.sarif",
                 "jtest_report-20230201-multiple_projects.sarif",
                 "D:/test/soavirt-someip_2; E:/Parasoft/testMultipleProjects/jtest/javaprojecttemplate",
-                "D:/test/soavirt-someip_2/,E:/Parasoft/testMultipleProjects/jtest/javaprojecttemplate/");
+                "D:/test/soavirt-someip_2/;E:/Parasoft/testMultipleProjects/jtest/javaprojecttemplate/");
     }
 
     @Test
@@ -99,7 +99,7 @@ public class XMLToSarifTest {
                 "cpptest-pro_report-202302-multiple_projects.sarif",
                 "cpptest-pro_report-202302-multiple_projects.sarif",
                 "E:/Parasoft/testMultipleProjects/cppPro/flowanalysiscpp_2; D:/test/flowanalysiscpp",
-                "E:/Parasoft/testMultipleProjects/cppPro/flowanalysiscpp_2/,D:/test/flowanalysiscpp/");
+                "E:/Parasoft/testMultipleProjects/cppPro/flowanalysiscpp_2/;D:/test/flowanalysiscpp/");
     }
 
     @Test
@@ -109,7 +109,7 @@ public class XMLToSarifTest {
                 "cpptest-std_report-202302-multiple_projects.sarif",
                 "cpptest-std_report-202302-multiple_projects.sarif",
                 "E:/Parasoft/testMultipleProjects/cppstand/flowanalysiscpp_2; D:/test/flowanalysiscpp",
-                "E:/Parasoft/testMultipleProjects/cppstand/flowanalysiscpp_2/,D:/test/flowanalysiscpp/");
+                "E:/Parasoft/testMultipleProjects/cppstand/flowanalysiscpp_2/;D:/test/flowanalysiscpp/");
     }
 
     @Test

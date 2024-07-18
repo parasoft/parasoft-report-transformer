@@ -120,7 +120,7 @@ public class XMLToSarif implements Callable<Integer> {
                 }
             }
             processedPaths = this.avoidDuplicateProjectRootPaths(processedPaths);
-            this.projectRootPaths = String.join(",", processedPaths);
+            this.projectRootPaths = String.join(";", processedPaths);
         } else {
             this.projectRootPaths = null;
         }
