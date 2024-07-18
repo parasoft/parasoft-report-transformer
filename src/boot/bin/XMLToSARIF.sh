@@ -6,7 +6,7 @@ print_usage() {
     echo "  -i, --inputXmlReport      Path to the input Parasoft XML report. (required)"
     echo "  -o, --outputSarifReport   Path to the output SARIF report."
     echo "  -t, --toolOrJavaHomeDir   Path to the tool or Java home directory."
-    echo "  -p, --projectRootPaths    Comma-separated paths to the project roots."
+    echo "  -p, --projectRootPaths    Semicolon-separated paths to the project roots."
     echo ""
 }
 

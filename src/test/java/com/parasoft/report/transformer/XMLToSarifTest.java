@@ -68,7 +68,7 @@ public class XMLToSarifTest {
                 "jtest-report-202401.xml",
                 "jtest-report-202401-2.sarif",
                 "jtest-report-202401-2.sarif",
-                "D:/JavaProjectTemplate/, D:/JavaProjectTemplate-1, D:\\JavaProjectTemplate-2",
+                "D:/JavaProjectTemplate/; D:/JavaProjectTemplate-1; D:\\JavaProjectTemplate-2",
                 "D:/JavaProjectTemplate/,D:/JavaProjectTemplate-1/,D:/JavaProjectTemplate-2/");
     }
 
@@ -78,7 +78,7 @@ public class XMLToSarifTest {
                 "jtest-report-202401.xml",
                 "jtest-report-202401-3.sarif",
                 "jtest-report-202401-3.sarif",
-                "/JavaProjectTemplate/, D:/JavaProjectTemplate-1",
+                "/JavaProjectTemplate/; D:/JavaProjectTemplate-1",
                 "/JavaProjectTemplate/,D:/JavaProjectTemplate-1/");
     }
 
@@ -88,7 +88,7 @@ public class XMLToSarifTest {
                 "jtest_report-20230201-multiple_projects.xml",
                 "jtest_report-20230201-multiple_projects.sarif",
                 "jtest_report-20230201-multiple_projects.sarif",
-                "D:/test/soavirt-someip_2, E:/Parasoft/testMultipleProjects/jtest/javaprojecttemplate",
+                "D:/test/soavirt-someip_2; E:/Parasoft/testMultipleProjects/jtest/javaprojecttemplate",
                 "D:/test/soavirt-someip_2/,E:/Parasoft/testMultipleProjects/jtest/javaprojecttemplate/");
     }
 
@@ -98,7 +98,7 @@ public class XMLToSarifTest {
                 "cpptest-pro_report-202302-multiple_projects.xml",
                 "cpptest-pro_report-202302-multiple_projects.sarif",
                 "cpptest-pro_report-202302-multiple_projects.sarif",
-                "E:/Parasoft/testMultipleProjects/cppPro/flowanalysiscpp_2, D:/test/flowanalysiscpp",
+                "E:/Parasoft/testMultipleProjects/cppPro/flowanalysiscpp_2; D:/test/flowanalysiscpp",
                 "E:/Parasoft/testMultipleProjects/cppPro/flowanalysiscpp_2/,D:/test/flowanalysiscpp/");
     }
 
@@ -108,7 +108,7 @@ public class XMLToSarifTest {
                 "cpptest-std_report-202302-multiple_projects.xml",
                 "cpptest-std_report-202302-multiple_projects.sarif",
                 "cpptest-std_report-202302-multiple_projects.sarif",
-                "E:/Parasoft/testMultipleProjects/cppstand/flowanalysiscpp_2, D:/test/flowanalysiscpp",
+                "E:/Parasoft/testMultipleProjects/cppstand/flowanalysiscpp_2; D:/test/flowanalysiscpp",
                 "E:/Parasoft/testMultipleProjects/cppstand/flowanalysiscpp_2/,D:/test/flowanalysiscpp/");
     }
 
@@ -251,7 +251,7 @@ public class XMLToSarifTest {
                         "jtest-report 202401.xml",
                         "jtest-report 202401.sarif",
                         "jtest-report-202401.sarif",
-                        "D:\\JavaProjectTemplate, D:/JavaProjectTemplate",
+                        "D:\\JavaProjectTemplate; D:/JavaProjectTemplate",
                         "D:/JavaProjectTemplate/");
             } catch (IOException e) {
                 fail("Unexpected exception", e);
@@ -282,7 +282,7 @@ public class XMLToSarifTest {
             CommandLine command  = new CommandLine(xml2sarif);
             String[] args = {"--inputXmlReport", TEST_RESOURCES_LOC + "/jtest-report 202401.xml",
                     "--outputSarifReport", TEST_RESOURCES_LOC + "/jtest-report 202401.sarif",
-                    "--projectRootPaths", "D:/JavaProjectTemplate, D:/JavaProjectTemplate, D:/JavaProjectTemplate/sub"};
+                    "--projectRootPaths", "D:/JavaProjectTemplate; D:/JavaProjectTemplate; D:/JavaProjectTemplate/sub"};
             int exitCode = command.execute(args);
 
             assertEquals(1, exitCode);

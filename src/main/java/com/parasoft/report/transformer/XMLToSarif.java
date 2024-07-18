@@ -49,7 +49,7 @@ public class XMLToSarif implements Callable<Integer> {
     @Option(names = {"--outputSarifReport", "-o"}, description = "Path to the output SARIF report.")
     private File outputSarifReport;
 
-    @Option(names = {"--projectRootPaths", "-p"}, description = "Path(s) to the project root(s). Use comma to separate multiple paths.")
+    @Option(names = {"--projectRootPaths", "-p"}, description = "Path(s) to the project root(s). Use semicolon to separate multiple paths.")
     private String projectRootPaths;
 
     public static void main(String[] args) {
@@ -108,7 +108,7 @@ public class XMLToSarif implements Callable<Integer> {
 
     private void checkProjectRootPathsParam() {
         if (this.projectRootPaths != null && !this.projectRootPaths.trim().isEmpty()) {
-            String[] pathsArray = this.projectRootPaths.trim().split(",");
+            String[] pathsArray = this.projectRootPaths.trim().split(";");
             String[] processedPaths = Arrays.stream(pathsArray).map((path) -> path.trim().replace("\\", "/")).toArray(String[]::new);
             for (String path : processedPaths) {
                 if (!this.isAbsolutePath(path)) {

@@ -116,7 +116,7 @@ echo Options:
 echo   -i, --inputXmlReport      Path to the input XML report. (required)
 echo   -o, --outputSarifReport   Path to the output SARIF report.
 echo   -t, --toolOrJavaHomeDir   Path to the tool or Java home directory.
-echo   -p, --projectRootPaths    Comma-separated paths to the project roots.
+echo   -p, --projectRootPaths    Semicolon-separated paths to the project roots.
 echo.
 exit /b 1
 
