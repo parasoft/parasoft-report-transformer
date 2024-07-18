@@ -39,25 +39,58 @@ Run the *XMLToSARIF* script in *bin* folder with Parasoft XML report:
 "runs" [
   {
     "tool": { ... }
-    "results": [ ... ]
+    "results": [ 
+      {
+        "ruleId": "APSC_DV.003215.MCH",
+        "level": "warning",
+        "message": {
+            "text": "This source file does not include a file header comment"
+        },
+        "locations": [
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                  "uri": "file:/C:/workspace/project/example/src/main/java/Example.java"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "ruleId": "NAMING.UHN",
+        "level": "warning",
+        "message": {
+            "text": "Variable 'a' does not end with 'int'"
+        },
+        "locations": [
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                  "uri": "file:/C:/workspace/project/demo/src/main/java/Demo.java"
+              }
+            }
+          }
+        ]
+      }
+    ],
     "artifacts": [
       {
         "location": {
-            "uri": "file:/C:/workspace/project/example/src/main/java/Example.java" 
+            "uri": "file:/C:/workspace/project/example/src/main/java/Example.java"
          } 
       },
       {
         "location": {
-            "uri": "file:/C:/workspace/project/demo/src/main/java/Demo.java" 
+            "uri": "file:/C:/workspace/project/demo/src/main/java/Demo.java"
         }
       }
     ]
   }
 ]
 ```
-For C/C++test Professional 2023.1 or earlier, to include sufficient relevant information in static analysis reports, the reports must be generated with the **Add absolute file paths to XML data** option enabled. You can enable this option on the command line by setting the `report.location_details=true` property in the settings file.
+For C/C++test Professional 2023.1 or earlier, to include sufficient relevant information in static analysis reports, the reports must be generated with the **Add absolute file paths to XML data** option enabled. You can enable this option on the command line by setting the `report.location_details=true` property or in the settings file.
 
-<br/>For a file location path in the SARIF report, if its project root path is specified in -p, its relative path will be shown; otherwise, its absolute path will be shown. For example:
+<br/>For a file location path (uri attribute) in the SARIF report, if its project root path is specified in `-p` option, its relative path will be shown; otherwise, its absolute path will be shown. For example, when the value of `-p` option is *"C:/workspace/project/example"*:
 ```code
 "runs" [
   {
@@ -65,18 +98,49 @@ For C/C++test Professional 2023.1 or earlier, to include sufficient relevant inf
     "originalUriBaseIds": {
       "PROJECTROOT-1": {
           "uri": "file:/C:/workspace/project/example/"
-      },
-      "PROJECTROOT-2": {
-          "uri": "file:/C:/project/demo/"
       }
     },
-    "results": [ ... ]
+    "results": [
+      {
+        "ruleId": "APSC_DV.003215.MCH",
+        "level": "warning",
+        "message": {
+            "text": "This source file does not include a file header comment"
+        },
+        "locations": [
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                  "uri": "src/main/java/Example.java"
+                  "uriBaseId": "PROJECTROOT-1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "ruleId": "NAMING.UHN",
+        "level": "warning",
+        "message": {
+            "text": "Variable 'a' does not end with 'int'"
+        },
+        "locations": [
+          {
+            "physicalLocation": {
+              "artifactLocation": {
+                  "uri": "file:/C:/workspace/project/demo/src/main/java/Demo.java"
+              }
+            }
+          }
+        ]
+      }
+    ],
     "artifacts": [
       {
         "location": {
-            "uri": "src/main/java/Example.java" 
+            "uri": "src/main/java/Example.java"
             "uriBaseId": "PROJECTROOT-1"
-         } 
+         }
       },
       {
         "location": {
