@@ -86,12 +86,17 @@ if "%JAVA_OR_PARASOFT_TOOL_ROOT_PATH%"=="" (
 
 :generate_report
 REM Generate SARIF report
-set "COMMAND_ARGS=-i %XML_REPORT_PATH%"
+set COMMAND_ARGS=-i "%XML_REPORT_PATH%"
 if not "%SARIF_REPORT_PATH%"=="" (
-    set "COMMAND_ARGS=%COMMAND_ARGS% -o %SARIF_REPORT_PATH%"
+    set COMMAND_ARGS=%COMMAND_ARGS% -o "%SARIF_REPORT_PATH%"
 )
 if not "%PROJECT_ROOT_PATHS%"=="" (
-    set "COMMAND_ARGS=%COMMAND_ARGS% -p %PROJECT_ROOT_PATHS%"
+    :remove_trailing_backslashes
+    if "%PROJECT_ROOT_PATHS:~-1%"=="\" (
+        set "PROJECT_ROOT_PATHS=%PROJECT_ROOT_PATHS:~0,-1%"
+        goto :remove_trailing_backslashes
+    )
+    set COMMAND_ARGS=%COMMAND_ARGS% -p "%PROJECT_ROOT_PATHS%"
 )
 
 call parasoft-report-transformer xml2sarif %COMMAND_ARGS%
