@@ -113,6 +113,16 @@ public class XMLToSarifTest {
     }
 
     @Test
+    public void testXMLToSarif_cpptest_pro202401_normal_additionalReport() throws IOException {
+        this.testXMLToSarif(
+                "cpptest-pro-report-202401-additional-report.xml",
+                "cpptest-pro-report-202401-additional-report.sarif",
+                "cpptest-pro-report-202401-additional-report.sarif",
+                "D:\\reports\\projects\\flowanalysiscpp%20(1)",
+                "D:/reports/projects/flowanalysiscpp%20(1)/");
+    }
+
+    @Test
     public void testXMLToSarif_cpptest_pro202401_normal_additionalWithFilterReport_1() throws IOException {
         this.testXMLToSarif(
                 "cpptest-pro-report-202401-additional-with-filter-report-1.xml",

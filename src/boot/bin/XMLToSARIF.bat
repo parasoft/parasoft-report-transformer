@@ -99,8 +99,7 @@ if not "%PROJECT_ROOT_PATHS%"=="" (
     set COMMAND_ARGS=%COMMAND_ARGS% -p "%PROJECT_ROOT_PATHS%"
 )
 
-call parasoft-report-transformer xml2sarif %COMMAND_ARGS%
-exit /b %errorlevel%
+parasoft-report-transformer xml2sarif %COMMAND_ARGS%
 
 :required_param_error
 echo Error: "-i" or "--inputXmlReport" is required.
