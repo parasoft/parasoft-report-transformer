@@ -114,10 +114,6 @@ public class XMLToSarif implements Callable<Integer> {
                 if (!this.isAbsolutePath(path)) {
                     throw new IllegalArgumentException(MessageFormat.format("Project root path must be an absolute path: {0}", path));
                 }
-                File rootFile = new File(path);
-                if (!rootFile.exists()) {
-                    Logger.warn(MessageFormat.format("WARNING: Project root path does not exist on this machine: {0}.", path));
-                }
             }
             processedPaths = this.avoidDuplicateProjectRootPaths(processedPaths);
             this.projectRootPaths = String.join(";", processedPaths);
