@@ -80,6 +80,14 @@
       "moduleVersion": "5.1.2",
       "moduleLicense": "W3C License",
       "moduleLicenseUrl": "https://github.com/xmlresolver/xmlresolverdata/blob/main/src/notices/w3c-license.txt"
+    },
+    {
+      "moduleName": "com.fasterxml.jackson.core:jackson-databind",
+      "moduleUrl": "https://github.com/FasterXML/jackson-databind",
+      "moduleVersion": "2.12.0",
+      "moduleLicense": "Apache License, Version 2.0",
+      "moduleLicenseUrl": "https://github.com/FasterXML/jackson-databind/blob/jackson-databind-2.12.0/LICENSE",
+      "moduleNoticeUrl": "https://github.com/FasterXML/jackson-databind/blob/jackson-databind-2.12.0/src/main/resources/META-INF/NOTICE"
     }
   ]
 }

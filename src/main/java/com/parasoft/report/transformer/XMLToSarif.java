@@ -16,6 +16,8 @@
 
 package com.parasoft.report.transformer;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.sf.saxon.s9api.QName;
 import net.sf.saxon.s9api.SaxonApiException;
 import net.sf.saxon.s9api.XdmAtomicValue;
@@ -26,6 +28,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -114,10 +117,6 @@ public class XMLToSarif implements Callable<Integer> {
                 if (!this.isAbsolutePath(path)) {
                     throw new IllegalArgumentException(MessageFormat.format("Project root path must be an absolute path: {0}", path));
                 }
-                File rootFile = new File(path);
-                if (!rootFile.exists()) {
-                    Logger.warn(MessageFormat.format("WARNING: Project root path does not exist on this machine: {0}.", path));
-                }
             }
             processedPaths = this.avoidDuplicateProjectRootPaths(processedPaths);
             this.projectRootPaths = String.join(";", processedPaths);
@@ -139,6 +138,7 @@ public class XMLToSarif implements Callable<Integer> {
         } catch (SaxonApiException e) {
             throw new IllegalArgumentException(MessageFormat.format("Transformation error: {0}", e.getMessage()));
         }
+        logUnconvertedPathsInSarifReport();
         Logger.info(MessageFormat.format("SARIF report has been created: {0}", this.outputSarifReport.getAbsolutePath()));
     }
 
@@ -163,5 +163,38 @@ public class XMLToSarif implements Callable<Integer> {
             uniquePaths.add(path);
         }
         return uniquePaths.toArray(new String[0]);
+    }
+
+    private void logUnconvertedPathsInSarifReport() {
+        if (this.projectRootPaths != null) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                JsonNode jsonNode = mapper.readTree(this.outputSarifReport);
+                JsonNode runsNode = jsonNode.get("runs");
+                Iterator<JsonNode> runsElements = runsNode.elements();
+                Set<String> uriSet = new HashSet<>();
+                runsElements.forEachRemaining(run -> {
+                    run.get("artifacts").elements().forEachRemaining(artifact -> {
+                        if (artifact.size() > 0) {
+                            JsonNode locationNode = artifact.get("location");
+                            if (!locationNode.has("uriBaseId")) {
+                                String uri = locationNode.get("uri").asText();
+                                uriSet.add(uri);
+                            }
+                        }
+                    });
+                });
+                if (!uriSet.isEmpty()) {
+                    List<String> uriList = new ArrayList<>(uriSet);
+                    Collections.sort(uriList);
+                    Logger.info("The following paths have not been converted to relative paths:");
+                    for (String uri : uriList) {
+                        Logger.info(MessageFormat.format("  {0}", uri));
+                    }
+                }
+            } catch (IOException e) {
+                Logger.error(MessageFormat.format("ERROR: Read SARIF report error: {0}", e.getMessage()));
+            }
+        }
     }
 }
