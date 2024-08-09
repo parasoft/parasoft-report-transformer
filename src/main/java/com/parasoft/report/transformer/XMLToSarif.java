@@ -136,7 +136,7 @@ public class XMLToSarif implements Callable<Integer> {
         try {
             XSLConverterUtil.transformReport(this.inputXmlReport, this.outputSarifReport, SARIF_XSL_RESOURCE_PATH, paramsMap);
         } catch (SaxonApiException e) {
-            throw new IllegalArgumentException(MessageFormat.format("Transformation error: {0}", e.getMessage()));
+            throw new IllegalArgumentException(MessageFormat.format("Transformation error: {0}", e.getMessage()), e);
         }
         logUnconvertedPathsInSarifReport();
         Logger.info(MessageFormat.format("SARIF report has been created: {0}", this.outputSarifReport.getAbsolutePath()));
