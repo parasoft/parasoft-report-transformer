@@ -68,7 +68,7 @@ public class XMLToSarif implements Callable<Integer> {
             this.convertXmlToSarif();
 
             return 0;
-        } catch (Exception e) {
+        } catch (Exception e) { // parasoft-suppress OWASP2021.A5.NCE "This is intentionally designed to prevent exceptions from bubbling up and causing the program to terminate."
             Logger.error(MessageFormat.format("ERROR: {0}", e.getMessage()));
             return 1;
         }
