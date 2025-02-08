@@ -163,6 +163,16 @@ public class XMLToSarifTest {
     }
 
     @Test
+    public void testXMLToSarif_jtest202402_normal_withSuppression() throws IOException {
+        this.testXMLToSarif(
+                "jtest-report-202402-suppression.xml",
+                "jtest-report-202402-suppression.sarif",
+                "jtest-report-202402-suppression.sarif",
+                "D:/JavaProjectTemplate/",
+                "D:/JavaProjectTemplate/");
+    }
+
+    @Test
     public void testXMLToSarif_invalid_xml_report() {
         testWithMockedLogger(mockedLogger -> {
             XMLToSarif xml2sarif = new XMLToSarif();
