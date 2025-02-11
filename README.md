@@ -74,7 +74,7 @@ Run the *XMLToSARIF* script in *bin* folder with Parasoft XML report:
         "suppressions": [
           {
             "kind": "external",
-            "justification": "The reason of suppression: This is epected."
+            "justification": "The reason of suppression."
           }
         ]
       }
@@ -96,7 +96,7 @@ Run the *XMLToSARIF* script in *bin* folder with Parasoft XML report:
 ```
 For C/C++test Professional 2023.1 or earlier, to include sufficient relevant information in static analysis reports, the reports must be generated with the **Add absolute file paths to XML data** option enabled. You can enable this option on the command line by setting the `report.location_details=true` property or in the settings file.
 
-<br/>For the `justification` property in the SARIF report indicates why a result was suppressed. When using C/C++test Professional, you must use version 2024.1 or later and include the command-line option `-property report.additional.report.dir=<REPORT_DIR>` when generating reports. Additionally, ensure you use reports from the specified directory.
+<br/>For the `justification` property in the SARIF report indicates why a result was suppressed. When using C/C++test Professional, you must use version 2024.1 or later and include the command-line option `-property report.additional.report.dir=<REPORT_DIR>` when generating reports. Additionally, ensure you use XML reports from the specified directory for transformation.
 
 <br/>For a file location path (uri property) in the SARIF report, if its project root path is specified in `-p` option, its relative path will be shown; otherwise, its absolute path will be shown. For example, when the value of `-p` option is *"C:/workspace/project/example"*:
 ```code
