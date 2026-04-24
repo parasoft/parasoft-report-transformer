@@ -173,6 +173,16 @@ public class XMLToSarifTest {
     }
 
     @Test
+    public void testXMLToSarif_jtest_report_with_duplicate_category_desc() throws IOException {
+        this.testXMLToSarif(
+            "jtest-report-202502_duplicate_category_desc.xml",
+            "jtest-report-202502_duplicate_category_desc.sarif",
+            "jtest-report-202502_duplicate_category_desc.sarif",
+            "D:/JavaProjectTemplate/",
+            "D:/JavaProjectTemplate/");
+    }
+
+    @Test
     public void testXMLToSarif_invalid_xml_report() {
         testWithMockedLogger(mockedLogger -> {
             XMLToSarif xml2sarif = new XMLToSarif();
