@@ -178,8 +178,8 @@ public class XMLToSarifTest {
             "jtest-report-202502_duplicate_category_desc.xml",
             "jtest-report-202502_duplicate_category_desc.sarif",
             "jtest-report-202502_duplicate_category_desc.sarif",
-            "D:/JavaProjectTemplate/",
-            "D:/JavaProjectTemplate/");
+            "D:\\Workspace\\javaprojecttemplate",
+            "D:/Workspace/javaprojecttemplate/");
     }
 
     @Test
