@@ -20,7 +20,7 @@ repositories {
 dependencies {
     implementation 'org.tinylog:tinylog-api:2.7.0'
     implementation 'org.tinylog:tinylog-impl:2.7.0'
-    implementation 'net.sf.saxon:Saxon-HE:12.2'
+    implementation 'net.sf.saxon:Saxon-HE:12.10'
     implementation 'info.picocli:picocli:4.6.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.4'
     annotationProcessor 'info.picocli:picocli-codegen:4.6.1'
